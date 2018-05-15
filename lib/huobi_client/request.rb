@@ -28,6 +28,7 @@ module HuobiClient
 
     def connect(method, path, options)
       options.compact!
+      options.transform_keys! { |key| key.to_s }
       params = {
         AccessKeyId: @access,
         SignatureMethod: 'HmacSHA256',

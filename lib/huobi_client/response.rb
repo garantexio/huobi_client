@@ -13,6 +13,7 @@ module HuobiClient
       @success = false
 
       begin
+        @body = JSON.parse(@body) unless @body.is_a? Hash
         @body = @body.with_indifferent_access if @body.is_a? Hash
       rescue => e
         p e.message

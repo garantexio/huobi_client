@@ -75,7 +75,7 @@ module HuobiClient
     end
 
     # 交易API
-    def place(account_id:, symbol:, type:, amount:, price: nil, source: 'api') # Pro站下单
+    def place(account_id: @account_id, symbol:, type:, amount:, price: nil, source: 'api') # Pro站下单
       # types
       # buy-market：市价买,
       # sell-market：市价卖,
@@ -86,7 +86,7 @@ module HuobiClient
       post '/v1/order/orders/place', fun_params(__method__, binding).transform_keys {|key| key.to_s.sub('_', '-')}
     end
 
-    def hadax_place(account_id:, symbol:, type:, amount:, price: nil, source: 'api') # HADAX站下单
+    def hadax_place(account_id: @account_id, symbol:, type:, amount:, price: nil, source: 'api') # HADAX站下单
       post '/v1/hadax/order/orders/place', fun_params(__method__, binding).transform_keys {|key| key.to_s.sub('_', '-')}
     end
 
@@ -98,21 +98,21 @@ module HuobiClient
       post '/v1/order/orders/batchcancel', fun_params(__method__, binding).transform_keys {|key| key.to_s.sub('_', '-')}
     end
 
-    def order_detail # 查询某个订单详情
-      get "/v1/order/orders/#{options[:order_id]}"
+    def order_detail(order_id:) # 查询某个订单详情
+      get "/v1/order/orders/#{order_id}"
     end
 
-    def match_results # 查询某个订单的成交明细
-      get "/v1/order/orders/#{options[:order_id]}/matchresults"
+    def match_results(order_id:) # 查询某个订单的成交明细
+      get "/v1/order/orders/#{order_id}/matchresults"
     end
 
-    def orders(symbol:, states:, types: nil, start_date: nil, end_date: nil, from: nil, direct: nil, size: nil) # 查询当前委托、历史委托
+    def orders(symbol: nil, states:, types: nil, start_date: nil, end_date: nil, from: nil, direct: nil, size: nil) # 查询当前委托、历史委托
       # direct	false	string	查询方向		prev 向前，next 向后
       # states	true	string	查询的订单状态组合，使用','分割		pre-submitted 准备提交, submitted 已提交, partial-filled 部分成交, partial-canceled 部分成交撤销, filled 完全成交, canceled 已撤销
       get '/v1/order/orders', fun_params(__method__, binding).transform_keys {|key| key.to_s.sub('_', '-')}
     end
 
-    def all_match_results(symbol:, states:, types: nil, start_date: nil, end_date: nil, from: nil, direct: nil, size: nil) # 查询当前成交、历史成交
+    def all_match_results(symbol: nil, states:, types: nil, start_date: nil, end_date: nil, from: nil, direct: nil, size: nil) # 查询当前成交、历史成交
       get '/v1/order/matchresults', fun_params(__method__, binding).transform_keys {|key| key.to_s.sub('_', '-')}
     end
 
@@ -130,8 +130,8 @@ module HuobiClient
       post '/v1/margin/orders', fun_params(__method__, binding)
     end
 
-    def margin_repay(amount:) # 归还借贷
-      post "/v1/margin/orders/#{options[order_id]}/repay", fun_params(__method__, binding)
+    def margin_repay(amount:, order_id:) # 归还借贷
+      post "/v1/margin/orders/#{order_id}/repay", fun_params(__method__, binding)
     end
 
     def loan_orders(symbol:, states: nil, start_date: nil, end_date: nil, from: nil, direct: nil, size: nil) # 借贷订单
