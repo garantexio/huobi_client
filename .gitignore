@@ -11,4 +11,6 @@
 .rspec_status
 
 /bin/detect
+/bin/client
 *.gem
+/Gemfile.lock

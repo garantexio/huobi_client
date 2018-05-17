@@ -50,7 +50,7 @@ module HuobiClient
       options = {
         url: HuobiClient::Config::BASE_URL,
         headers:  {
-          user_agent: HuobiClient::Config::USER_AGENT
+          user_agent: 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 ' + HuobiClient::Config::USER_AGENT
         },
       }
 
