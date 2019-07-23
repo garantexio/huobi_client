@@ -143,7 +143,7 @@ module HuobiClient
     end
 
     # 虚拟币提现API
-    def withdraw(address:, amount:, currency:, fee: nil, addr_tag: nil) # 申请提现虚拟币
+    def withdraw(address:, amount:, currency:, fee: nil, addr_tag: nil, chain: nil) # 申请提现虚拟币
       post '/v1/dw/withdraw/api/create', fun_params(__method__, binding).transform_keys {|key| key.to_s.sub('_', '-')}
     end
 
