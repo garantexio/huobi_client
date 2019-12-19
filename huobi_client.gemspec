@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{A Huobi api client.}
   spec.description   = %q{A Huobi api client.}
-  spec.homepage      = "https://github.com/vcinly/huobi_client"
+  spec.homepage      = "https://github.com/profforg/huobi_client"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
@@ -21,11 +21,11 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "faraday", "~> 0.12"
-  spec.add_dependency "faraday_middleware", "~> 0.12"
-  spec.add_dependency "activerecord", "~> 4.2.10"
-  spec.add_dependency "json", "~> 2.1"
-  spec.add_dependency "awesome_print", "~> 1.8.0"
+  spec.add_dependency "faraday"
+  spec.add_dependency "faraday_middleware"
+  spec.add_dependency "activerecord", "~> 5.0"
+  spec.add_dependency "json"
+  spec.add_dependency "awesome_print"
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"

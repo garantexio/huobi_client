@@ -23,7 +23,7 @@ module HuobiClient
 
       str = Faraday::FlatParamsEncoder.encode(params.sort)
 
-      sign "#{method.to_s.upcase}\napi.huobi.pro\n#{path}\n#{str}"
+      sign "#{method.to_s.upcase}\n#{HuobiClient::Config::API_URL}\n#{path}\n#{str}"
     end
 
     def connect(method, path, options)
@@ -37,6 +37,7 @@ module HuobiClient
       }.transform_keys { |key| key.to_s }
 
       params['Signature'] = build_and_sign(method, path, options, params)
+      path = HuobiClient::Config::URL_PREFIX + path
 
       options.merge! params if method.upcase == :GET
 
