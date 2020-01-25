@@ -60,6 +60,9 @@ symbols
 .withdraw
 .withdraw_cancel
 .withdraw_query
+.withdraw_quota
+
+.deposit_address
 
 [中文](https://github.com/huobiapi/API_Docs/wiki/REST_authentication)
 [English](https://github.com/huobiapi/API_Docs_en/wiki/REST_Reference)
