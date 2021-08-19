@@ -45,12 +45,20 @@ module HuobiClient
       get '/v1/common/symbols'
     end
 
+    def market_status
+      get '/v2/market-status'
+    end
+
     def hadax_symbols
       get '/v1/hadax/common/symbols'
     end
 
     def currencys
       get '/v1/common/currencys'
+    end
+
+    def currencies
+      get '/v2/reference/currencies'
     end
 
     def hadax_currencys
