@@ -159,7 +159,7 @@ module HuobiClient
       post '/v1/dw/withdraw-virtual/{withdraw-id}/cancel'
     end
 
-    def withdraw_query(currency:, type:, from: nil, size: nil, direct: nil) # 查询虚拟币充提记录
+    def withdraw_query(currency: nil, type:, from: nil, size: nil, direct: 'next') # 查询虚拟币充提记录
       # type	true	string	'deposit' or 'withdraw'
       get '/v1/query/deposit-withdraw', fun_params(__method__, binding)
     end
