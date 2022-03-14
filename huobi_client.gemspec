@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "faraday"
   spec.add_dependency "faraday_middleware"
+  spec.add_dependency 'faye-websocket', '~> 0.10'
   spec.add_dependency "activerecord"
   spec.add_dependency "json"
   spec.add_dependency "awesome_print"
