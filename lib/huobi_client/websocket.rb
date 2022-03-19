@@ -14,7 +14,8 @@ message = proc { |e| p "message:#{e}" }
 error   = proc { |e| p "error:#{e}" }
 close   = proc { p 'ws closed' }
 log = proc { |e| p "log:#{e}" }
-cbs = { open: open_p, message: message, error: error, close: close, log: log }
+ping = proc { |e| p "ping:#{e}" }
+cbs = { open: open_p, message: message, error: error, close: close, log: log, ping: ping }
 
 # 1 - instance methods(subscribe, unsubscribe, request)
 #     available topics: :candlestick, :ticker, :depth, :by_price_incremental, :by_price_refresh, :best_bid_offer, :trade_detail, :details, :etp, :order_updates, :trade_clearing, :accounts_update
@@ -263,6 +264,7 @@ module HuobiClient
       #  v1 ping                v2 ping(auth)
       if data[:ping] || (data[:action] && data[:action] == 'ping')
         send_pong(data)
+        methods[:ping]&.call(data)
         return
       end
 
