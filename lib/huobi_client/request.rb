@@ -29,6 +29,9 @@ module HuobiClient
     def connect(method, path, options)
       options.compact!
       options.transform_keys! { |key| key.to_s }
+
+      Rails.logger.debug message: "Huobi API call: #{method} #{path}", options: options
+
       params = {
         AccessKeyId: @access,
         SignatureMethod: 'HmacSHA256',
