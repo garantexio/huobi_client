@@ -143,7 +143,8 @@ module HuobiClient
       @websocket = create_websocket
       @req_type = 'sub'
       @params = {}
-      @callbacks_hash = []
+      @callbacks_hash = options[:callbacks_hash] || []
+      attach_callbacks
     end
 
     def subscribe(params:, callbacks_hash:)
@@ -178,6 +179,23 @@ module HuobiClient
       end
     end
 
+    # EXAMPLE
+    # cbs = { open: on_open, message: on_message, error: on_error, close: on_close, ping: on_ping, log: on_log }
+    # topics = []
+    # topics << { topic: :depth, params: { symbol: 'btcusdt', type: 'step0' }}
+    # topics << { topic: :ticker, params: { symbol: 'btcusdt' }}
+    #                    ANY PUBLIC TOPIC
+    # command = { options: { topic: :depth, callbacks_hash: cbs}, topics: topics }
+    def self.subscribe_in_single_socket(command)
+      raise 'Hash with options and topics with params expected' unless command.is_a?(Hash)
+
+      huobi_ws = new(command[:options])
+      topics = command[:topics]
+      topics.each do |topic_hash|
+        huobi_ws.send_to_websocket(req_type: 'sub', params: topic_hash)
+      end
+    end
+
     def self.method_missing(method_name, *args)
       if TOPICS.keys.include?(method_name.to_sym)
         command_hash = args[0]
@@ -192,18 +210,14 @@ module HuobiClient
       TOPICS.keys.include?(method_name.to_sym) || super
     end
 
+    def send_to_websocket(req_type:, params:)
+      topic = params[:topic] || @topic
+      message = stream_request_data(req_type: req_type, topic: topic, params: params.reject { |k, _| k == :topic} )
+      @callbacks_hash[:log]&.call("Send: #{message}")
+      @websocket.send(message)
+    end
+
     private
-
-    def create_websocket
-      url = stream_url(@topic)
-      Faye::WebSocket::Client.new(url)
-    end
-
-    def stream_url(topic)
-      aws_suffix = @aws ? '-aws' : ''
-      endpoint = TOPICS[topic][:url_endpoint]
-      "wss://api#{aws_suffix}.huobi.pro/#{endpoint}"
-    end
 
     def attach_callbacks_and_send_to_websocket
       attach_callbacks
@@ -247,6 +261,17 @@ module HuobiClient
       substitude(str: request_template, subst_hash: params)
     end
 
+    def create_websocket
+      url = stream_url(@topic)
+      Faye::WebSocket::Client.new(url)
+    end
+
+    def stream_url(topic)
+      aws_suffix = @aws ? '-aws' : ''
+      endpoint = TOPICS[topic][:url_endpoint]
+      "wss://api#{aws_suffix}.huobi.pro/#{endpoint}"
+    end
+
     def process_message(message:)
       methods = @callbacks_hash
       message = zipped_answer?(@topic) ? Zlib::GzipReader.new(StringIO.new(message.data.pack('C*'))).read : message.data
@@ -273,12 +298,6 @@ module HuobiClient
       else
         methods[:message].call(data)
       end
-    end
-
-    def send_to_websocket(req_type:, params:)
-      message = stream_request_data(req_type: req_type, topic: @topic, params: params)
-      @callbacks_hash[:log]&.call("Send: #{message}")
-      @websocket.send(message)
     end
 
     def send_auth
