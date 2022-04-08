@@ -159,7 +159,7 @@ module HuobiClient
       run_command(command: 'req', params: params, callbacks_hash: callbacks_hash)
     end
 
-    def run_command(command:, params:, callbacks_hash:)
+    def run_command(command:, params:, callbacks_hash: nil)
       @req_type = command
       @params = params
       @callbacks_hash = callbacks_hash
@@ -225,6 +225,8 @@ module HuobiClient
     end
 
     def attach_callbacks
+      return unless @callbacks_hash.present?
+
       @callbacks_hash.each_pair do |key, method|
         next if key == :log
 
