@@ -182,7 +182,7 @@ module HuobiClient
     end
 
     def withdraw_query(currency: nil, type:, from: nil, size: nil, direct: 'next') # 查询虚拟币充提记录
-      # type	true	string	'deposit' or 'withdraw'
+      # type: 'deposit' or 'withdraw'
       get '/v1/query/deposit-withdraw', fun_params(__method__, binding)
     end
 
@@ -190,8 +190,17 @@ module HuobiClient
       get '/v2/account/withdraw/quota', fun_params(__method__, binding)
     end
 
-    def deposit_address(currency:)
-      get '/v2/account/deposit/address', fun_params(__method__, binding)
+    def deposit_address(currency:, subUid: nil)
+      if subUid
+        get '/v2/sub-user/deposit-address', fun_params(__method__, binding)
+      else
+        get '/v2/account/deposit/address', fun_params(__method__, binding)
+      end
+    end
+
+    # only for sub-accounts, for main account use withdraw_query method
+    def deposit_query(subUid:, currency: nil, startTime: nil, endTime: nil, sort: nil, limit: nil, fromId: nil)
+      get '/v2/sub-user/query-deposit', fun_params(__method__, binding)
     end
 
     private
