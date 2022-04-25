@@ -21,7 +21,7 @@ module HuobiClient
       end
 
       if SUCCESS_STATUS.include? original_response.status
-        @success = @body[:status] == 'ok'
+        @success = @body[:status] == 'ok' || @body[:ok]
       end
     end
 
