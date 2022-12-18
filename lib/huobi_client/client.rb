@@ -209,8 +209,17 @@ module HuobiClient
       get '/v1/order/orders', fun_params(__method__, binding)
     end
 
-    def all_match_results(symbol: nil, states:, types: nil, start_date: nil, end_date: nil, from: nil, direct: nil, size: nil) # 查询当前成交、历史成交
+    def all_match_results(symbol: nil, types: nil, start_time: nil, end_time: nil, from: nil, direct: nil, size: nil) # 查询当前成交、历史成交
       get '/v1/order/matchresults', fun_params(__method__, binding)
+    end
+
+    # This endpoint returns orders based on a specific searching criteria. The orders created via API will no longer be queryable after being cancelled for more than 2 hours.
+    def order_history(symbol: nil, start_time: nil, end_time: nil, direct: nil, size: nil)
+      # direct	    false	string	Direction of the query	| prev, next (default: next)
+      # start-time	false	long	  Start time (included) | UTC time in millisecond (default: 48 hours)
+      # end-time	  false	long	  End time (included) | 	UTC time in millisecond (default: The query time)
+      # size	      false	int	    Number of items in each response (10-1000, default: 100)
+      get '/v1/order/history', fun_params(__method__, binding)
     end
 
     # 借贷交易API （重要：如果使用借贷资产交易，请在下单接口/v1/order/orders/place请求参数source中填写‘margin-api’）
